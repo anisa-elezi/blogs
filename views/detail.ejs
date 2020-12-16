@@ -1,0 +1,111 @@
+<%-include('./partials/head.ejs')%>
+
+<body>
+  <%-include('./partials/nav.ejs')%>
+
+
+  <div class="details content">
+    <h2><%= blog.title %></h2>
+    <div class="content">
+      
+      <h3 id="edit" contenteditable="true">Body of <%= blog.title %>'s: <%= blog.body %></h3>
+      <pre>click to edit body of this blog</pre>
+      <h3  >Snippet of blog: <%= blog.snippet %></h3>
+    </div>
+    <a class="delete" data-doc="<%= blog._id %>">Delete</a>
+
+
+    <a class="save" data-doc1="<%= blog._id %>" >Save Changes</a>
+    <!--<%= blog._id %> =id  of blog we want to delete  -->
+    <!-- -doc =emer cfardo -->
+  </div>
+
+
+
+  <%- include("./partials/footer.ejs") %>
+
+
+  <script>
+    const trashcan = document.querySelector('a.delete');
+    trashcan.addEventListener('click', (e) => {
+      const endpoint = `/blogs/${trashcan.dataset.doc}`;
+      fetch(endpoint, {
+        method: 'DELETE',
+      })
+        .then(response => response.json())
+        .then(data => window.location.href = data.redirect)
+        .catch(err => console.log(err));
+    });
+
+
+
+    const update = document.querySelector('a.save');
+    update.addEventListener('click', (e) => {
+    
+    const endpoint = `/blogs/${update.dataset.doc1}`;
+      fetch(endpoint, {
+        method: "PUT", 
+        headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+                body :  document.getElementById('edit').innerText
+                
+            })
+        
+      })
+        .then((response) => response.json())
+        .then(data => window.location.href = data.redirect)
+        .catch((err) => console.log(err));
+ 
+    });
+
+
+    // function save(){
+    // var edit = document.getElementById('edit');
+    // edit.innerHTML=localStorage.getItem('edit');
+    // edit.addEventListener('blur',function(){
+    //     localStorage.setItem('edit',this.innerHTML);
+    // })}
+
+//     function save() {
+
+// //get the editable element
+// var editElem = document.getElementById("edit");
+
+// //get the edited element content
+// var userVersion = editElem.innerHTML;
+
+// //save the content to local storage
+// localStorage.userEdits = userVersion;
+
+// //write a confirmation to the user
+// document.getElementById("update").innerHTML="Edits saved!";
+
+// }
+
+// var body = $('edit');
+// var todo = {body: body.val};
+
+// $(document).ready(function(){
+// $('div').on('submit', function(){
+//   var body = $('edit');
+// var todo = {body: body.val};
+// $.ajax({
+//   type: 'GET',
+//   url: '/:id',
+//   data: todo,
+//   success: function(blog){
+//     location.reload();
+//   }
+// });
+// return false;
+// })
+// });
+
+
+
+
+
+
+  </script>
